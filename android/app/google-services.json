@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "673870087124",
+    "project_id": "drawtask",
+    "storage_bucket": "drawtask.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673870087124:android:d7bd0ed2553fd561938c41",
+        "android_client_info": {
+          "package_name": "com.example.drawtask"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673870087124-fkifoc6usrp77tdqil5osmsuv5ocl0fq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBibJULQ5qO_1yt0cYsE2dXc49a7aHECJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673870087124-fkifoc6usrp77tdqil5osmsuv5ocl0fq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "673870087124-4mdp6r3rt7eviipoaeb16btl0gjgbinp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.drawtask"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
