@@ -16,3 +16,4 @@ List<Page> authRootPages(
       return [VerificationScreen.page()];
   }
 }
+
