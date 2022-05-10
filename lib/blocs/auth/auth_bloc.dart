@@ -2,41 +2,39 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 
-import '../../models/models.dart';
-import '../../repository/repository.dart';
+import '../../repositories/auth_repository.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
-  StreamSubscription<User>? _userSubscription;
+  StreamSubscription<auth.User?>? _userSubscription;
 
-  AuthBloc({required AuthRepository authRepository})
-      : _authRepository = authRepository,
-        super(authRepository.currentUser.isNotEmpty
-            ? AuthState.authenticated(authRepository.currentUser)
-            : const AuthState.unauthenticated()) {
-    on<AuthUserChanged>(_onUserChanged);
-    on<AuthLogout>(_onLogout);
+  AuthBloc({
+    required AuthRepository authRepository,
+  })  : _authRepository = authRepository,
+        super(const AuthState.unknown()) {
+    on<AuthUserChanged>(_authUserChanged);
 
-    _userSubscription =
-        _authRepository.user.listen((user) => add(AuthUserChanged(user)));
+    _userSubscription = _authRepository.user.listen((user) {
+      add(AuthUserChanged(user: user));
+    });
   }
 
-  void _onUserChanged(AuthUserChanged event, Emitter<AuthState> emit) {
-    if (event.user.isNotEmpty) {
+  void _authUserChanged(
+    AuthUserChanged event,
+    Emitter<AuthState> emit,
+  ) {
+    if (event.user != null) {
       _authRepository.verify
-          ? emit(AuthState.authenticated(event.user))
+          ? emit(AuthState.authenticated(user: event.user!))
           : emit(const AuthState.unconfirmed());
     } else {
       emit(const AuthState.unauthenticated());
     }
-  }
-
-  void _onLogout(AuthLogout event, Emitter<AuthState> emit) {
-    unawaited(_authRepository.logOut());
   }
 
   @override

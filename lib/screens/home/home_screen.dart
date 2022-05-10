@@ -1,35 +1,35 @@
-import 'package:drawtask/blocs/auth/auth_bloc.dart';
+import 'package:drawtask/repositories/repositories.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  static Page page() => const MaterialPage<void>(child: HomeScreen());
+  static const String routeName = '/home';
+
+  static Route route() {
+    return MaterialPageRoute(
+        settings: const RouteSettings(name: routeName),
+        builder: (context) => const HomeScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
-    final user = context.select((AuthBloc bloc) => bloc.state.user);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
       body: Center(
-        child: Column(
-          children: [
-            const SizedBox(height: 100),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(AuthLogout());
-                },
-                child: const Text('Log out')),
-            const SizedBox(
-              height: 40,
-            ),
-            Text(user.email.toString())
-          ],
-        ),
-      ),
+          child: Column(
+        children: [
+          const SizedBox(height: 160),
+          const Text('Home'),
+          const SizedBox(height: 60),
+          ElevatedButton(
+              onPressed: () async {
+                await RepositoryProvider.of<AuthRepository>(context).signOut();
+                await Navigator.pushNamed(context, '/authRoot');
+              },
+              child: const Text('signout'))
+        ],
+      )),
     );
   }
 }

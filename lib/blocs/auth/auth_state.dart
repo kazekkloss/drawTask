@@ -1,27 +1,32 @@
 part of 'auth_bloc.dart';
 
-enum AuthStatus { authenticated, unauthenticated, unconfirmed }
+enum AuthStatus { unknown, unauthenticated, unconfirmed, authenticated }
 
 class AuthState extends Equatable {
   final AuthStatus status;
-  final User user;
+  final auth.User? user;
 
   const AuthState._({
-    required this.status,
-    this.user = User.empty,
+    this.status = AuthStatus.unknown,
+    this.user,
   });
 
-  const AuthState.authenticated(User user)
-      : this._(status: AuthStatus.authenticated, user: user);
-
-  const AuthState.unconfirmed() 
-      : this._(
-          status: AuthStatus.unconfirmed
-        );
+  const AuthState.unknown() : this._();
 
   const AuthState.unauthenticated()
       : this._(
           status: AuthStatus.unauthenticated,
+        );
+
+  const AuthState.unconfirmed()
+      : this._(
+          status: AuthStatus.unconfirmed,
+        );
+
+  const AuthState.authenticated({required auth.User user})
+      : this._(
+          status: AuthStatus.authenticated,
+          user: user,
         );
 
   @override

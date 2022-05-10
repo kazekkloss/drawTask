@@ -1,8 +1,7 @@
-import 'package:drawtask/screens/screens.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubits/signup/signup_cubit.dart';
-import 'package:flutter/material.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({Key? key}) : super(key: key);
@@ -14,86 +13,45 @@ class SignupForm extends StatefulWidget {
 class _SignupFormState extends State<SignupForm> {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignupCubit, SignupState>(
-      listener: (context, state) {
-        if (state.status == SignupStatus.error) {}
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(40.0),
-        child: Form(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              _EmailInput(),
-              SizedBox(height: 30),
-              _PasswordInput(),
-              SizedBox(
-                height: 40,
-              ),
-              _SignupButton()
-            ],
+    return BlocBuilder<SignupCubit, SignupState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Form(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Email',
+                    ),
+                    onChanged: (value) {
+                      context.read<SignupCubit>().emailChanged(value);
+                    }),
+                const SizedBox(height: 20),
+                TextField(
+                  decoration: const InputDecoration(hintText: 'Password'),
+                  onChanged: (value) {
+                    context.read<SignupCubit>().passwordChanged(value);
+                  },
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: () async {
+                      await context.read<SignupCubit>().signUpCubit();
+                      await Navigator.pushNamed(context, '/authRoot');
+                    },
+                    child: const Text('sign in')),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                    onPressed: () async {
+                      await Navigator.pushNamed(context, '/login');
+                    },
+                    child: const Text('log in to yoour account')),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _EmailInput extends StatelessWidget {
-  const _EmailInput({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
-      buildWhen: ((previous, current) => previous.email != current.email),
-      builder: (context, state) {
-        return TextField(
-          onChanged: (email) {
-            context.read<SignupCubit>().emailChanged(email);
-          },
-          decoration: const InputDecoration(labelText: 'Email'),
         );
-      },
-    );
-  }
-}
-
-class _PasswordInput extends StatelessWidget {
-  const _PasswordInput({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
-      buildWhen: ((previous, current) => previous.password != current.password),
-      builder: (context, state) {
-        return TextField(
-          onChanged: (password) {
-            context.read<SignupCubit>().paswordChanged(password);
-          },
-          decoration: const InputDecoration(labelText: 'Password'),
-        );
-      },
-    );
-  }
-}
-
-class _SignupButton extends StatelessWidget {
-  const _SignupButton({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignupCubit, SignupState>(
-      buildWhen: ((previous, current) => previous.status != current.status),
-      builder: (context, state) {
-        return state.status == SignupStatus.submitting
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: () async {
-                  try {
-                    context.read<SignupCubit>().signupCubit();
-                  } catch (_) {}
-                },
-                child: const Text('Ok'));
       },
     );
   }
